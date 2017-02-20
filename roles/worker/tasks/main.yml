@@ -13,13 +13,6 @@
 - apt: upgrade=dist update_cache=yes force=yes
   tags: dist-upgrade
 
-- group: name=admin state=present
-  tags: user
-- group: name=ubuntu state=present
-  tags: user
-- user: name=ubuntu append=yes groups=ubuntu,admin password={{ user_password }} shell=/bin/bash # password: python -c 'import crypt; print crypt.crypt("This is my Password", "$1$SomeSalt$")'
-  tags: user
-
 - name: Install some basic packages
   apt: pkg={{ item }} state=latest update_cache=yes
   with_items:
@@ -27,6 +20,7 @@
     - build-essential
     - tmux
     - vim
+    - python3-pip
   tags: common_package
 
 ##################################################################
@@ -70,3 +64,17 @@
 - name: Set swapiness
   shell: echo 0 | sudo tee /proc/sys/vm/swappiness
   tags: swap
+
+##################################################################
+# pip
+##################################################################
+- name: Upgrade pip
+  command: pip install --upgrade pip install --upgrade pip
+  tags: pip
+
+##################################################################
+# install pip packages
+##################################################################
+- name: Install numpy, matplotlib
+  command: pip install numpy matplotlib
+  tags: pip
